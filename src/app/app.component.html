@@ -1,0 +1,69 @@
+<nav class="navbar navbar-dark bg-dark bar">
+  <div class="container-fluid c-f">
+    <a class="navbar-brand enterprise">Cyber Enterprise</a>
+    <form class="d-flex form-search" role="search">
+      <input class="form-control me-2 btn-input" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="param" (keyup)="getEmployees()" name="look">
+      <button class="btn btn-outline-success btn-input" type="submit" (click)="getEmployees()">Search</button>
+    </form>
+  </div>
+</nav>
+
+<app-message-error *ngIf="error" [message]="error"></app-message-error>
+<app-message-confirmation *ngIf="confirmation" [message]="confirmation"></app-message-confirmation>
+<app-spinner *ngIf="isLoading"></app-spinner>
+
+<main class="main">
+
+    <div class="modalConfirm" *ngIf="isDeleting">
+        <p class="text_modal">¿Do you really want to delete this record?</p>
+        <div class="action_modal">
+            <button class="btn_modal cancel" (click)="isDeleting = false">Cancel</button>
+            <button class="btn_modal confirm" (click)="deleteEmployee()" (click)="isDeleting = false">Confirm</button>
+        </div>
+    </div>
+
+    <h1 class="title text-center">Employees register</h1>
+    <div class="container-main">
+        <form action="" class="form" *ngIf="formIsActive">
+            <input type="text" name="identification_card" placeholder="Identification card number" class="input" [(ngModel)]="employee.identification_card" id="identification" (keyup)="validateIdentification($event)" (keyup)="validateInputs()">
+            <input type="text" name="name" placeholder="Name" class="input" [(ngModel)]="employee.name" id="name" (keyup)="validateName($event)" (keyup)="validateInputs()">
+            <input type="text" name="surnames" placeholder="Surnames" class="input" [(ngModel)]="employee.surnames" id="surnames" (keyup)="validateSurnames($event)" (keyup)="validateInputs()">
+            <div *ngIf="isUpdating == false">
+              <input type="button"class="btn btn-success input bt" value="Save" (click)="newEmployee()" *ngIf="isActiveAll">
+              <input type="button"class="btn btn-success input bt" value="Save" (click)="newEmployee()" *ngIf="!isActiveAll" disabled>
+            </div>
+            <div *ngIf="isUpdating == true">
+              <input type="button"class="btn btn-warning input bt" value="Update" (click)="updateEmployee()" *ngIf="isActiveAll">  
+              <input type="button"class="btn btn-warning input bt" value="Update" (click)="updateEmployee()" *ngIf="!isActiveAll" disabled>  
+            </div>
+        </form>
+
+        <div class="table-action__container">
+            <table class="table table-dark tb">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">First</th>
+                      <th scope="col">Last</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let employee of employees" class="table-light">
+                      <th scope="row">{{employee.identification_card}}</th>
+                      <td>{{employee.name}}</td>
+                      <td>{{employee.surnames}}</td>
+                      <td><div class="actions">
+                        <button class="btn btn-warning action_b" (click)="getEmployee(employee.id)" (click)="formIsActive = true" (click)="isUpdating = true"><i class="fa-solid fa-pen action"></i></button>
+                        <button class="btn btn-danger action_b" (click)="getId(employee.id)" (click)="isDeleting = true"><i class="fa-solid fa-trash action"></i></button>
+                      </div>
+                    </tr>
+                  </tbody>
+            </table>
+            <div class="buttons">
+                <button class="btn btn-primary bt-action" *ngIf="formIsActive == false" (click)="cleanForm()">New employee</button>
+                <button class="btn btn-warning bt-action" *ngIf="formIsActive" (click)="formIsActive = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+</main>
